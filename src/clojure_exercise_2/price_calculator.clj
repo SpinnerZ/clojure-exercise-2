@@ -3,7 +3,7 @@
 
 (def vat 0.05M)
 
-(defn consumption-price
+(defn- consumption-price
   "Returns the charge value with the price and consumption given"
   [price consumption]
   (* price consumption))
@@ -15,7 +15,7 @@
          tail (rest plan-thresholds)
          kwh consumption
          charge 0]
-    ;;If kwh is 0 or less, finish and return the charge
+          ;;If kwh is 0 or less, finish and return the charge
     (cond (<= kwh 0) charge
 
           ;;If kwh is lesser than the threshold or if there is no threshold, finish adding the price and return the charge
@@ -25,7 +25,7 @@
           :else (recur (first tail)
                        (rest tail)
                        (- kwh (:threshold head))
-                       (+ charge (consumption-price (:price head) kwh))))))
+                       (+ charge (consumption-price (:price head) (:threshold head)))))))
 
 (defn add-vat
   "Returns the price rounded with VAT added to it"

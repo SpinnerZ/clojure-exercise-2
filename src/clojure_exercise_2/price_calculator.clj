@@ -1,7 +1,7 @@
 (ns clojure-exercise-2.price-calculator
   (:require [clojure-exercise-2.plans :refer :all]))
 
-(def vat 0.05M)
+(def vat 1.05M)
 
 (defn- consumption-price
   "Returns the charge value with the price and consumption given"
@@ -35,7 +35,7 @@
 (defn- add-vat
   "Returns the price rounded with VAT added to it"
   [price]
-  (+ price (* price vat)))
+  (* price vat))
 
 (defn annual-price
   "Given a plan and consumption, calculates the price using the plan data"

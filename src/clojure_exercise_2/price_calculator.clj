@@ -8,7 +8,7 @@
   [price consumption]
   (* price consumption))
 
-(defn threshold-consumption-price
+(defn- threshold-consumption-price
   "Returns the price calculating the consumption for each threshold given (as a map)"
   [plan-thresholds consumption]
   (loop [head (first plan-thresholds)
@@ -27,12 +27,19 @@
                        (- kwh (:threshold head))
                        (+ charge (consumption-price (:price head) (:threshold head)))))))
 
-(defn add-vat
+(defn- add-standing-charge
+  "Adds the standing charge * 365 to the price"
+  [standing-charge price]
+  (+ price (* standing-charge 365)))
+
+(defn- add-vat
   "Returns the price rounded with VAT added to it"
   [price]
   (+ price (* price vat)))
 
 (defn annual-price
-  "Given a plan and consumption, calculates the price using all threshold"
+  "Given a plan and consumption, calculates the price using the plan data"
   [plan consumption]
-  ())
+  (->> (threshold-consumption-price (:rates plan) consumption)
+       (add-standing-charge (:standing_charge plan 0))
+       (add-vat)))

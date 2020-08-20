@@ -1,16 +1,14 @@
 (ns clojure-exercise-2.consumption-calculator)
 
-(def vat 1.05M)
-
 (defn- rem-vat
   "Removes the VAT from a price"
   [price]
-  (/ price vat))
+  (/ price 1.05M))
 
 (defn- rem-standing-charge
   "Removes the standing-charge from a MONTHLY price"
   [standing-charge price]
-  (- price (standing-charge * 30M)))
+  (- price (* standing-charge 30M)))
 
 (defn- monthly-price->annual-price
   "Returns the price * 12"
@@ -26,12 +24,13 @@
          spend charge]
 
           ;;Spend zero means end
-    (cond (<= 0 spend) consumption
+    (cond (<= spend 0) consumption
 
           ;;If there is no tail, no need to check threshold anymore.
-          ;;If the spend is lesser than the threshold, means that it's the last iteration.
+          ;;If the spend is lesser than the threshold max price, means that it's the last iteration.
           (or (empty? tail)
-              (< spend (:threshold head)))
+              (< spend (* (:threshold head)
+                          (:price head))))
           (+ consumption (/ spend (:price head)))
 
           ;;If the price is higher than the threshold, there is more work to do
@@ -45,7 +44,10 @@
 (defn annual-usage
   "Receives the plan and value spend in a month and calculates how much energy would be used annually"
   [plan spend]
-  (->> (rem-vat spend)
-       (rem-standing-charge (:standing_charge plan 0))
-       (monthly-price->annual-price)
-       (price-threshold->consumption (:rates plan))))
+  (if (zero? spend)
+    spend
+    (->> (rem-vat spend)
+         (rem-standing-charge (:standing_charge plan 0))
+         (monthly-price->annual-price)
+         (with-precision 12)
+         (price-threshold->consumption (:rates plan)))))

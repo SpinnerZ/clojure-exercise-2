@@ -8,7 +8,7 @@
 (defn- rem-standing-charge
   "Removes the standing-charge from a MONTHLY price"
   [standing-charge price]
-  (- price (* standing-charge 30M)))
+  (- price (* standing-charge 30.416667M)))
 
 (defn- monthly-price->annual-price
   "Returns the price * 12"
@@ -20,7 +20,7 @@
   [thresholds charge]
   (loop [head (first thresholds)
          tail (rest thresholds)
-         consumption 0
+         consumption 0M
          spend charge]
 
           ;;Spend zero means end
@@ -31,14 +31,14 @@
           (or (empty? tail)
               (< spend (* (:threshold head)
                           (:price head))))
-          (+ consumption (/ spend (:price head)))
+          (+ consumption (with-precision 12 (/ spend (:price head))))
 
           ;;If the price is higher than the threshold, there is more work to do
           :else (recur (first tail)
                        (rest tail)
                        (+ consumption (:threshold head))
                        (- spend
-                          (* (:price head)
+                          (* (bigdec (:price head))
                              (:threshold head)))))))
 
 (defn annual-usage
@@ -50,4 +50,5 @@
          (rem-standing-charge (:standing_charge plan 0))
          (monthly-price->annual-price)
          (with-precision 12)
-         (price-threshold->consumption (:rates plan)))))
+         (price-threshold->consumption (:rates plan))
+         (int))))

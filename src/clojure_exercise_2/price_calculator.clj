@@ -1,5 +1,4 @@
-(ns clojure-exercise-2.price-calculator
-  (:require [clojure-exercise-2.plans :refer :all]))
+(ns clojure-exercise-2.price-calculator)
 
 (def vat 1.05M)
 
@@ -19,7 +18,9 @@
     (cond (<= kwh 0) charge
 
           ;;If kwh is lesser than the threshold or if there is no threshold, finish adding the price and return the charge
-          (or (empty? tail) (< kwh (:threshold head))) (+ charge (consumption-price (:price head) kwh))
+          (or (empty? tail)
+              (< kwh (:threshold head)))
+          (+ charge (consumption-price (:price head) kwh))
 
           ;;If kwh is bigger than the threshold, calculate the price and prepare for the next loop
           :else (recur (first tail)

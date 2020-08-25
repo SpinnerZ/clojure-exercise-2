@@ -4,20 +4,21 @@
               [clojure.data.json :as json])
     (:gen-class))
 
-(def plans-path "resources/plans.json")
-
 (defn load-plans
   "Reads the json input and puts in memory as a map"
   [path]
   (json/read-str (slurp path) :key-fn keyword))
 
-(def plans (load-plans plans-path))
+(def all-plans (load-plans "resources/plans.json"))
 
 (defn single-price-consumption
   "Returns the supplier, plan and total cost from an annual consumption"
-  [plan consumption]
-  ({:supplier (:supplier plan)
-    :plan (:plan plan)
-    :total-cost (price/annual-price plan consumption)}))
+  [consumption plan]
+  {:supplier (:supplier plan)
+   :plan (:plan plan)
+   :total-cost (price/annual-price plan consumption)})
 
-  (single-price-consumption (first plans) 1000)
+(defn all-plans-price-consumption
+  "Gets all plans price given a consumption input, sorting them by cheapest first"
+  [consumption plans]
+  ((map (partial single-price-consumption consumption) plans)))

@@ -11,3 +11,13 @@
   [path]
   (json/read-str (slurp path) :key-fn keyword))
 
+(def plans (load-plans plans-path))
+
+(defn single-price-consumption
+  "Returns the supplier, plan and total cost from an annual consumption"
+  [plan consumption]
+  ({:supplier (:supplier plan)
+    :plan (:plan plan)
+    :total-cost (price/annual-price plan consumption)}))
+
+  (single-price-consumption (first plans) 1000)

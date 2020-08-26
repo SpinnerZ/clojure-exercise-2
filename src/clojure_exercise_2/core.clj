@@ -21,4 +21,16 @@
 (defn all-plans-price-consumption
   "Gets all plans price given a consumption input, sorting them by cheapest first"
   [consumption plans]
-  ((map (partial single-price-consumption consumption) plans)))
+  (sort-by :total-cost (map (partial single-price-consumption consumption) plans)))
+
+(defn print-prices
+  "Prints to console the supplier, plan and total-cost from given seq or unique map"
+  [plans]
+  (run! #(println
+          (str (:supplier %) ","
+               (:plan %) ","
+               (.setScale
+                  (with-precision 12 (/ (:total-cost %) 100M))
+                  2
+                  java.math.RoundingMode/HALF_UP)))
+        plans))

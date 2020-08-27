@@ -45,8 +45,8 @@
 
 (defn -main
   "nuSwitch Energy Comparison"
-  [& args]
-  (loop [input args]
+  []
+  (loop [input (str/split (read-line) #" ")]
         (let [command (first input)
               values (rest input)]
           (condp = command

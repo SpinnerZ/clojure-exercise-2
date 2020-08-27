@@ -57,7 +57,7 @@ usage edf fixed 59
 exit
 ```
 
-Output exaples for the example inputs, using the [sample `json` file](./resources/plans.json):
+Output examples for the example inputs, using the [sample `json` file](./resources/plans.json):
 
 ```
 eon,variable,108.68

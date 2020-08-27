@@ -46,16 +46,19 @@
 (defn -main
   "nuSwitch Energy Comparison"
   []
+  (print ">")
   (loop [input (str/split (read-line) #" ")]
         (let [command (first input)
               values (rest input)]
           (condp = command
            "price" (do (print-prices-all-plans (int (first values)))
                        (flush)
+                       (print ">")
                        (recur (str/split (read-line) #" ")))
            "usage" (do (print-consumption (filter #(= (first values) (:plan %))
                                                   all-plans)
                                           (last values))
                        (flush)
+                       (print ">")
                        (recur (str/split (read-line) #" ")))
            "exit" nil))))

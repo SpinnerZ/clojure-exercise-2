@@ -10,8 +10,6 @@
   [path]
   (json/read-str (slurp path) :key-fn keyword))
 
-(def all-plans (load-plans "resources/plans.json"))
-
 (defn- single-price-consumption
   "Returns the supplier, plan and total cost from an annual consumption"
   [consumption plan]
@@ -41,20 +39,21 @@
   [plan spend]
   (println (consumption/annual-usage plan (* spend 100))))
 
-(def print-prices-all-plans (comp print-prices (partial all-plans-price-consumption all-plans)))
+(def print-prices-all-plans (comp print-prices all-plans-price-consumption))
 
 (defn -main
   "nuSwitch Energy Comparison"
-  []
+  [plans-path]
   (loop [input (str/split (read-line) #" ")]
         (let [command (first input)
               values (rest input)]
           (condp = command
-           "price" (do (print-prices-all-plans (Integer/parseInt (first values)))
+           "price" (do (print-prices-all-plans (load-plans plans-path)
+                                               (Integer/parseInt (first values)))
                        (flush)
                        (recur (str/split (read-line) #" ")))
            "usage" (do (print-consumption (first (filter #(= (first values) (:supplier %))
-                                                  all-plans))
+                                                         (load-plans plans-path)))
                                           (Integer/parseInt (last values)))
                        (flush)
                        (recur (str/split (read-line) #" ")))

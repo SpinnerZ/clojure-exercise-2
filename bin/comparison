@@ -1,0 +1,2 @@
+# nuSwitch Energy Comparison
+lein trampoline run "$@"

@@ -1,6 +1,6 @@
 # Clojure-exercise-2
 
-It is a solution to "nuSwitch Energy Comparison" code challenge made in Clojure.
+It is a solution to "Energy Comparison" code challenge made in Clojure.
 
 ## Objectives
 
